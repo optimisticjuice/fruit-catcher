@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import basketImg from './assets/basket.png';
 import backgroundMusic from "./assets/background-music.mp3";
+import Fruit from "./Fruit";
+import Basket from "./Basket";
+import Display from "./Display";
+import useWindowDimensions from "./Dimensions";
 
 const FRUIT_SIZE = 50;
-
 const fruitImages = [
   "/fruits/pear.png",
   "/fruits/apple.png",
@@ -15,64 +17,11 @@ const fruitImages = [
   "/fruits/grapefruit.png",
   "/fruits/guava.png",
 ];
-// After your fruitImages array and before Basket component, replace Fruit component with:
-
-
-// Custom hook to get dynamic window size
-function useWindowDimensions() {
-  const getWindowDimensions = () => ({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
   
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-  
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    window.addEventListener("resize", handleResize);
-    return () => {window.removeEventListener("resize", handleResize);
-      document.documentElement.style.overflow = "auto";
-      document.body.style.overflow = "auto";
-    }
-  }, []);
-  
-  return windowDimensions;
-}
 
 function getRandomX(maxWidth) {
   return Math.floor(Math.random() * (maxWidth - FRUIT_SIZE));
-}
 
-function Fruit({ x, y, image }) {
-  const style = {
-    position: "absolute",
-    left: x,
-    top: y,
-    width: FRUIT_SIZE,
-    height: FRUIT_SIZE,
-    imageRendering: "pixelated",
-    userSelect: "none",
-    pointerEvents: "none",
-  };
-  return <img src={image} alt="fruit" style={style} draggable={false} />;
-}
-
-
-function Basket({ x, width }) {
-  const style = {
-    position: "absolute",
-    bottom: 0,
-    left: x,
-    width: width,
-    height: 30,
-    borderRadius: 10,
-  };
-  return <img src={basketImg} alt="basket" style={style} draggable={false} />;
-  ;
 }
 
 export default function App() {
@@ -84,73 +33,11 @@ export default function App() {
   const [fruits, setFruits] = useState([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [timer, setTimer] = useState(82);
+  const [timer, setTimer] = useState(8);
   const [volumeLevel, setVolumeLevel] = useState(5);
   const [gameStarted, setGameStarted] = useState(false); // tracks if the game has begun
   let fruitSpawnIndex = useRef(0); // define at the top of App() before useEffects
 
-
-  function Display(){
-    return(
-      <div
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="game-over-title"
-  aria-describedby="game-over-message"
-    style={{
-      position: "fixed",
-      inset: 0, // cover viewport to create a backdrop
-      top: GAME_HEIGHT / 2 - 40, // Center vertically
-      left: GAME_WIDTH / 2 - 100, // Center horizontally
-      width: 200,
-      height: 120,
-      backgroundColor: "rgba(0,0,0,0.8)", // Semi-transparent dark overlay
-      color: "white",
-      textAlign: "center",
-      padding: 20,
-      borderRadius: 10,
-      display: "flex",
-      flexDirection: "column", // Stack text + button
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 1000, // Make sure it overlays game canvas
-    }}
-  >
-    {/* Game Over message */}
-    <h3 style={{ margin: 0 }}>Game Over</h3>
-
-    {/* Restart button */}
-    <button
-      onClick={() => {
-        // Restart the game state
-        restartGame();
-
-        // Restart the background music if available
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0; // Reset audio to start
-          audioRef.current
-            .play()
-            .catch(() => {
-              // Ignore autoplay errors in browsers
-            });
-        }
-      }}
-      style={{
-        marginTop: 15,
-        padding: "8px 16px",
-        borderRadius: 6,
-        border: "none",
-        cursor: "pointer",
-        backgroundColor: "#4caf50", // Green button
-        color: "white",
-        fontWeight: "bold",
-      }}
-    >
-      Restart Game
-    </button>
-  </div>
-    ) 
-  }
 useEffect(() => {
   if (gameOver) return;
 
@@ -170,7 +57,12 @@ useEffect(() => {
   return () => clearInterval(spawnInterval);
 }, [gameOver, gameStarted, GAME_WIDTH]);
 
-
+ // 🍎 NEW EFFECT TO PAUSE AUDIO ON GAME OVER 🎶
+ useEffect(() => {
+  if (gameOver && audioRef.current) {
+    audioRef.current.pause();
+  }
+}, [gameOver]);
 
   // Reset basket position when GAME_WIDTH changes
   useEffect(() => {
@@ -236,14 +128,23 @@ useEffect(() => {
     return () => clearTimeout(timerId);
   }, [timer, gameOver, gameStarted]);
   
+  const startMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0; // Reset audio to start
+      audioRef.current.play().catch(() => {
+        // Ignore play errors due to autoplay restrictions
+      });
+    }
+  };
+  
   // Restart game
   const restartGame = () => {
     setScore(0);
     setFruits([]);
-    setTimer(82);
+    setTimer(7);
     setBasketX(GAME_WIDTH / 2 - basketWidth / 2);
     setGameOver(false);
-   
+    startMusic();
   };
 
   useEffect(() => {
@@ -267,6 +168,8 @@ useEffect(() => {
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [gameStarted]);
       
+    
+
   return (
     <>
         <div>
@@ -288,14 +191,14 @@ useEffect(() => {
       ))}
 
       <Basket x={basketX} width={basketWidth} />
-      <div style={{ position: "absolute", top: 10, left: 10, fontSize: 18 }}>
+      <div style={{ position: "absolute", top: 15, left: 35, fontSize: 18 }}>
         Score: {score}
       </div>
       <div style={{position: "absolute", top: 50, right: 90, fontSize: 15 }}>Press keys 1 to 9 to change volume (current: {volumeLevel})</div>
       <div style={{ position: "absolute", top: 25, right: 25, fontSize: 18 }}>
         Time: {timer}
       </div>
-      {gameOver && <Display/>}
+      {gameOver && <Display restartGame={restartGame}/>}
       {!gameStarted && !gameOver && (
         <div
         style={{
