@@ -128,7 +128,7 @@ import MoveBasket from './MoveBasket';
       <div style={{ position: "absolute", top: 25, right: 25, fontSize: 18 }}>
         Time: {timer}
       </div>
-      {gameOver && <Display restartGame={restartGame}/>}
+      {gameOver && <Display restartGame={restartGame} score={score}/>}
       {!gameStarted && !gameOver && (
         <div
         style={{
