@@ -4,67 +4,41 @@ import Fruit from "./Fruit";
 import Basket from "./Basket";
 import Display from "./Display";
 import useWindowDimensions from "./Dimensions";
-
-const FRUIT_SIZE = 50;
-const fruitImages = [
-  "/fruits/pear.png",
-  "/fruits/apple.png",
-  "/fruits/grape.png",
-  "/fruits/naartjie.png",
-  "/fruits/banana.png",
-  "/fruits/pineapple.png",
-  "/fruits/mangoe.png",
-  "/fruits/grapefruit.png",
-  "/fruits/guava.png",
-];
-  
-
-function getRandomX(maxWidth) {
-  return Math.floor(Math.random() * (maxWidth - FRUIT_SIZE));
-
-}
+import GameTimer from './GameTimer';  
+import FruitSpawning from './FruitSpawning';
+import {FRUIT_SIZE, fruitImages, getRandomX} from './GameUtils';
+import AudioManager from './AudioManager';
 
 export default function App() {
   const { width: GAME_WIDTH, height: GAME_HEIGHT } = useWindowDimensions();
   const basketWidth = GAME_WIDTH * 0.2; // Calculate 20% of current game width
-  const fruitIdRef = useRef(0);
-  const audioRef = useRef(null);
   const [basketX, setBasketX] = useState(GAME_WIDTH / 2 - basketWidth / 2);
-  const [fruits, setFruits] = useState([]);
   const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
-  const [timer, setTimer] = useState(8);
   const [volumeLevel, setVolumeLevel] = useState(5);
-  const [gameStarted, setGameStarted] = useState(false); // tracks if the game has begun
-  let fruitSpawnIndex = useRef(0); // define at the top of App() before useEffects
+  //  AudioManager makes the background music play and pause and controls the volume
+   const { audioRef, startMusic, pauseMusic } = AudioManager(backgroundMusic, volumeLevel);
+  const {   
+    timer,   
+    gameOver,   
+    gameStarted,   
+    setGameOver,   
+    resetTimer,   
+    startTimer   
+  } = GameTimer(8);  
 
-useEffect(() => {
-  if (gameOver) return;
-
-  const spawnInterval = setInterval(() => {
-    if (!gameStarted) return;
-    setFruits((fruits) => {
-      // Use fruitSpawnIndex ref to pick image in alternating fashion
-      const image = fruitImages[fruitSpawnIndex.current % fruitImages.length];
-      fruitSpawnIndex.current++;
-
-      const x = getRandomX(GAME_WIDTH);
-      // Add new fruit with assigned image and unique id
-      return [...fruits, { x, y: 0, id: fruitIdRef.current++, image }];
-    });
-  }, 1000);
-
-  return () => clearInterval(spawnInterval);
-}, [gameOver, gameStarted, GAME_WIDTH]);
-
- // 🍎 NEW EFFECT TO PAUSE AUDIO ON GAME OVER 🎶
- useEffect(() => {
-  if (gameOver && audioRef.current) {
-    audioRef.current.pause();
-  }
-}, [gameOver]);
-
-  // Reset basket position when GAME_WIDTH changes
+  const { fruits, setFruits, resetFruits } = FruitSpawning(  
+    gameStarted,   
+    gameOver,   
+    GAME_WIDTH,   
+    fruitImages  
+  );  
+  // 🍎 NEW EFFECT TO PAUSE AUDIO ON GAME OVER 🎶
+  useEffect(() => {
+   if (gameOver) {
+     pauseMusic();
+   }
+ }, [gameOver]);
+ // Reset basket position when GAME_WIDTH changes
   useEffect(() => {
     setBasketX(GAME_WIDTH / 2 - basketWidth / 2);
   }, [GAME_WIDTH, basketWidth]);
@@ -115,33 +89,14 @@ useEffect(() => {
 
     return () => clearInterval(fallInterval);
   }, [basketX, gameOver,gameStarted, GAME_HEIGHT]);
-
-  // Timer countdown
-  useEffect(() => {
-    if (gameOver || !gameStarted) return;
-    
-    if (timer === 0) {
-      
-      setGameOver(true);
-      }
-    const timerId = setTimeout(() => setTimer((t) => t - 1), 1000);
-    return () => clearTimeout(timerId);
-  }, [timer, gameOver, gameStarted]);
   
-  const startMusic = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0; // Reset audio to start
-      audioRef.current.play().catch(() => {
-        // Ignore play errors due to autoplay restrictions
-      });
-    }
-  };
+
   
   // Restart game
   const restartGame = () => {
     setScore(0);
     setFruits([]);
-    setTimer(7);
+    resetTimer();
     setBasketX(GAME_WIDTH / 2 - basketWidth / 2);
     setGameOver(false);
     startMusic();
@@ -219,7 +174,7 @@ useEffect(() => {
         {/* Show Start button if game has NOT started */}
         <button
   onClick={() => {
-    setGameStarted(true);  // Start the game
+   startTimer();  // Start the game
 
     if (audioRef.current) {
       if (audioRef.current.paused || audioRef.current.ended) {
