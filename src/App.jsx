@@ -8,13 +8,15 @@ import GameTimer from './GameTimer';
 import FruitSpawning from './FruitSpawning';
 import {FRUIT_SIZE, fruitImages, getRandomX} from './GameUtils';
 import AudioManager from './AudioManager';
+import MoveBasket from './MoveBasket';
 
-export default function App() {
+  export default function App() {
   const { width: GAME_WIDTH, height: GAME_HEIGHT } = useWindowDimensions();
   const basketWidth = GAME_WIDTH * 0.2; // Calculate 20% of current game width
   const [basketX, setBasketX] = useState(GAME_WIDTH / 2 - basketWidth / 2);
   const [score, setScore] = useState(0);
   const [volumeLevel, setVolumeLevel] = useState(5);
+
   //  AudioManager makes the background music play and pause and controls the volume
    const { audioRef, startMusic, pauseMusic } = AudioManager(backgroundMusic, volumeLevel);
   const {   
@@ -43,25 +45,10 @@ export default function App() {
     setBasketX(GAME_WIDTH / 2 - basketWidth / 2);
   }, [GAME_WIDTH, basketWidth]);
   
-  // Move basket with arrow keys
-  const moveBasket = useCallback(
-    (e) => {
-      if (gameOver) return;
   
-      if (e.key === "ArrowLeft") {
-        setBasketX((x) => Math.max(0, x - 20));
-      } else if (e.key === "ArrowRight") {
-        setBasketX((x) => Math.min(GAME_WIDTH - basketWidth, x + 20));
-      }
-    },
-    [gameOver, GAME_WIDTH, basketWidth]
-  );
+  MoveBasket(gameOver, GAME_WIDTH, basketWidth, setBasketX);
   
-  useEffect(() => {
-    window.addEventListener("keydown", moveBasket);
-    return () => window.removeEventListener("keydown", moveBasket);
-  }, [moveBasket]);
-
+  
   // Animate fruit falling and check for catch
   useEffect(() => {
     if (!gameStarted || gameOver ) return;
@@ -90,27 +77,15 @@ export default function App() {
     return () => clearInterval(fallInterval);
   }, [basketX, gameOver,gameStarted, GAME_HEIGHT]);
   
-
-  
   // Restart game
   const restartGame = () => {
     setScore(0);
-    setFruits([]);
+    resetFruits();
     resetTimer();
     setBasketX(GAME_WIDTH / 2 - basketWidth / 2);
     setGameOver(false);
     startMusic();
   };
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volumeLevel / 9;
-      if (!audioRef.current.paused && audioRef.current.muted) {
-        audioRef.current.muted = false;
-      }
-    }
-  }, [volumeLevel]);
-  
 
     // Listen for keypress events to update volume
     useEffect(() => {
