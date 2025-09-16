@@ -87,13 +87,75 @@ export default function App() {
   const [timer, setTimer] = useState(82);
   const [volumeLevel, setVolumeLevel] = useState(5);
   const [gameStarted, setGameStarted] = useState(false); // tracks if the game has begun
-  
   let fruitSpawnIndex = useRef(0); // define at the top of App() before useEffects
 
+
+  function Display(){
+    return(
+      <div
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="game-over-title"
+  aria-describedby="game-over-message"
+    style={{
+      position: "fixed",
+      inset: 0, // cover viewport to create a backdrop
+      top: GAME_HEIGHT / 2 - 40, // Center vertically
+      left: GAME_WIDTH / 2 - 100, // Center horizontally
+      width: 200,
+      height: 120,
+      backgroundColor: "rgba(0,0,0,0.8)", // Semi-transparent dark overlay
+      color: "white",
+      textAlign: "center",
+      padding: 20,
+      borderRadius: 10,
+      display: "flex",
+      flexDirection: "column", // Stack text + button
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000, // Make sure it overlays game canvas
+    }}
+  >
+    {/* Game Over message */}
+    <h3 style={{ margin: 0 }}>Game Over</h3>
+
+    {/* Restart button */}
+    <button
+      onClick={() => {
+        // Restart the game state
+        restartGame();
+
+        // Restart the background music if available
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0; // Reset audio to start
+          audioRef.current
+            .play()
+            .catch(() => {
+              // Ignore autoplay errors in browsers
+            });
+        }
+      }}
+      style={{
+        marginTop: 15,
+        padding: "8px 16px",
+        borderRadius: 6,
+        border: "none",
+        cursor: "pointer",
+        backgroundColor: "#4caf50", // Green button
+        color: "white",
+        fontWeight: "bold",
+      }}
+    >
+      Restart Game
+    </button>
+  </div>
+    ) 
+  }
 useEffect(() => {
   if (gameOver) return;
 
   const spawnInterval = setInterval(() => {
+    if (!gameStarted) return;
     setFruits((fruits) => {
       // Use fruitSpawnIndex ref to pick image in alternating fashion
       const image = fruitImages[fruitSpawnIndex.current % fruitImages.length];
@@ -136,8 +198,8 @@ useEffect(() => {
 
   // Animate fruit falling and check for catch
   useEffect(() => {
-    if (gameOver || !gameStarted ) return;
-
+    if (!gameStarted || gameOver ) return;
+     
     const fallInterval = setInterval(() => {
       setFruits((fruits) => {
         let newFruits = [];
@@ -164,17 +226,16 @@ useEffect(() => {
 
   // Timer countdown
   useEffect(() => {
-    if (gameOver) return;
+    if (gameOver || !gameStarted) return;
     
     if (timer === 0) {
+      
       setGameOver(true);
-      return;
-    }
-
+      }
     const timerId = setTimeout(() => setTimer((t) => t - 1), 1000);
     return () => clearTimeout(timerId);
-  }, [timer,gameStarted, gameOver]);
-
+  }, [timer, gameOver, gameStarted]);
+  
   // Restart game
   const restartGame = () => {
     setScore(0);
@@ -234,7 +295,8 @@ useEffect(() => {
       <div style={{ position: "absolute", top: 25, right: 25, fontSize: 18 }}>
         Time: {timer}
       </div>
-      {!gameStarted && (
+      {gameOver && <Display/>}
+      {!gameStarted && !gameOver && (
         <div
         style={{
           position: "absolute",
@@ -270,8 +332,11 @@ useEffect(() => {
   Start Game
 </button>
 
+<div>
+  {/* Show popup only if the game has started AND is over */}
 
-        </div>
+</div>
+      </div>
       )}
     </div>
       </>
