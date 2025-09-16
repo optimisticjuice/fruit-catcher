@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';  
   
-export default function GameTimer(initialTime = 8) {  
+export default function GameTimer(initialTime) {  
   const [timer, setTimer] = useState(initialTime);  
   const [gameOver, setGameOver] = useState(false);  
   const [gameStarted, setGameStarted] = useState(false);  

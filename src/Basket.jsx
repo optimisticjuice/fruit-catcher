@@ -2,6 +2,7 @@ import basketImg from './assets/basket.png';
 
 const Basket = ({ x, width }) => {
   const style = {
+    transform: "scale(1.25)",
     position: "absolute",
     bottom: 0,
     left: x,

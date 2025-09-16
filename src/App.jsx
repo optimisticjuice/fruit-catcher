@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import backgroundMusic from "./assets/background-music.mp3";
 import Fruit from "./Fruit";
 import Basket from "./Basket";
@@ -16,17 +16,18 @@ import MoveBasket from './MoveBasket';
   const [basketX, setBasketX] = useState(GAME_WIDTH / 2 - basketWidth / 2);
   const [score, setScore] = useState(0);
   const [volumeLevel, setVolumeLevel] = useState(5);
-
+  const gameTime = 83;
   //  AudioManager makes the background music play and pause and controls the volume
    const { audioRef, startMusic, pauseMusic } = AudioManager(backgroundMusic, volumeLevel);
-  const {   
+  //  Timer controls the game time and game over
+   const {   
     timer,   
     gameOver,   
     gameStarted,   
     setGameOver,   
     resetTimer,   
     startTimer   
-  } = GameTimer(8);  
+  } = GameTimer(gameTime);  
 
   const { fruits, setFruits, resetFruits } = FruitSpawning(  
     gameStarted,   
@@ -48,7 +49,6 @@ import MoveBasket from './MoveBasket';
   
   MoveBasket(gameOver, GAME_WIDTH, basketWidth, setBasketX);
   
-  
   // Animate fruit falling and check for catch
   useEffect(() => {
     if (!gameStarted || gameOver ) return;
@@ -64,7 +64,7 @@ import MoveBasket from './MoveBasket';
             fruit.x + FRUIT_SIZE > basketX &&
             fruit.x < basketX + basketWidth
           ) {
-            setScore((score) => score + 1); // Increase score if caught
+            setScore((score) => score + 0.5); // Increase score if caught
           } else if (newY < GAME_HEIGHT) {
             newFruits.push({ ...fruit, y: newY }); // keep fruit falling
           }
@@ -124,7 +124,7 @@ import MoveBasket from './MoveBasket';
       <div style={{ position: "absolute", top: 15, left: 35, fontSize: 18 }}>
         Score: {score}
       </div>
-      <div style={{position: "absolute", top: 50, right: 90, fontSize: 15 }}>Press keys 1 to 9 to change volume (current: {volumeLevel})</div>
+      
       <div style={{ position: "absolute", top: 25, right: 25, fontSize: 18 }}>
         Time: {timer}
       </div>
@@ -136,7 +136,7 @@ import MoveBasket from './MoveBasket';
           top: GAME_HEIGHT / 2 - 40,
           left: GAME_WIDTH / 2 - 100,
           width: 200,
-          height: 80,
+          height: 150,
           backgroundColor: "rgba(0,0,0,0.8)",
           color: "white",
           textAlign: "center",
@@ -144,6 +144,7 @@ import MoveBasket from './MoveBasket';
           borderRadius: 10,
         }}
         >
+          <div>Press keys 1 to 9 to change volume (current: {volumeLevel})</div>
           <div>Start Game!</div>
          {/* Show Start button if game hasn't started */}
         {/* Show Start button if game has NOT started */}
@@ -164,10 +165,7 @@ import MoveBasket from './MoveBasket';
 >
   Start Game
 </button>
-
 <div>
-  {/* Show popup only if the game has started AND is over */}
-
 </div>
       </div>
       )}

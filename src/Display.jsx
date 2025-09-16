@@ -1,6 +1,6 @@
 import useWindowDimensions from "./Dimensions";
 import { useRef } from "react";
-export default function Display({restartGame}){
+export default function Display({restartGame, score}){
     const { width: GAME_WIDTH, height: GAME_HEIGHT } = useWindowDimensions();
     const audioRef = useRef(null);
     return(
@@ -28,6 +28,7 @@ export default function Display({restartGame}){
       zIndex: 1000, // Make sure it overlays game canvas
     }}
   >
+    Score: {score}
     {/* Game Over message */}
     <h3 style={{ margin: 0 }}>Game Over</h3>
 
@@ -59,6 +60,7 @@ export default function Display({restartGame}){
       }}
     >
       Restart Game
+
     </button>
   </div>
     ) 
