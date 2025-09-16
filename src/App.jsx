@@ -278,7 +278,7 @@ useEffect(() => {
         width: GAME_WIDTH,
         height: GAME_HEIGHT,
         border: "2px solid black",
-        backgroundColor: "#a8d0a8",
+        backgroundColor: "lightyellow",
         overflow: "hidden",
         margin: "0 auto",
       }}
