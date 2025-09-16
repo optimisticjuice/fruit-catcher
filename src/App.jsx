@@ -135,7 +135,7 @@ import MoveBasket from './MoveBasket';
           position: "absolute",
           top: GAME_HEIGHT / 2 - 40,
           left: GAME_WIDTH / 2 - 100,
-          width: 200,
+          width: 270,
           height: 150,
           backgroundColor: "rgba(0,0,0,0.8)",
           color: "white",
