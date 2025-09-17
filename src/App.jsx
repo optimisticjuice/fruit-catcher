@@ -9,6 +9,7 @@ import FruitSpawning from './FruitSpawning';
 import {FRUIT_SIZE, fruitImages, getRandomX} from './GameUtils';
 import AudioManager from './AudioManager';
 import MoveBasket from './MoveBasket';
+import './App.css';
 
   export default function App() {
   const { width: GAME_WIDTH, height: GAME_HEIGHT } = useWindowDimensions();
@@ -105,50 +106,29 @@ import MoveBasket from './MoveBasket';
         <div>
           <audio ref={audioRef} src={backgroundMusic}>Audio Doesn't work</audio>
         </div>   
-     <div
-      style={{
-        position: "relative",
-        width: GAME_WIDTH,
-        height: GAME_HEIGHT,
-        border: "2px solid black",
-        backgroundColor: "lightyellow",
-        overflow: "hidden",
-        margin: "0 auto",
-      }}
-      >
+     <div className="game-container">
       {fruits.map(({ id, x, y, image }) => (
         <Fruit key={id} x={x} y={y} image={image} />
       ))}
 
       <Basket x={basketX} width={basketWidth} />
-      <div style={{ position: "absolute", top: 15, left: 35, fontSize: 18 }}>
+      <div className="score">
         Score: {score}
       </div>
       
-      <div style={{ position: "absolute", top: 25, right: 25, fontSize: 18 }}>
+      <div className="timer">
         Time: {timer}
       </div>
       {gameOver && <Display restartGame={restartGame} score={score}/>}
       {!gameStarted && !gameOver && (
         <div
-        style={{
-          position: "absolute",
-          top: GAME_HEIGHT / 2 - 40,
-          left: GAME_WIDTH / 2 - 100,
-          width: 270,
-          height: 150,
-          backgroundColor: "rgba(0,0,0,0.8)",
-          color: "white",
-          textAlign: "center",
-          padding: 20,
-          borderRadius: 10,
-        }}
+        className="start-modal"
         >
           <div>Press keys 1 to 9 to change volume (current: {volumeLevel})</div>
           <div>Start Game!</div>
          {/* Show Start button if game hasn't started */}
         {/* Show Start button if game has NOT started */}
-        <button
+        <button className="start-button"
   onClick={() => {
    startTimer();  // Start the game
 
@@ -161,7 +141,6 @@ import MoveBasket from './MoveBasket';
       }
     }
   }}
-  style={{ marginTop: 10 }}
 >
   Start Game
 </button>
