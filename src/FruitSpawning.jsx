@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';  
-  
+import { useState, useEffect, useRef } from 'react';
+import { getRandomX } from './GameUtils';
+
 export default function FruitSpawning(gameStarted, gameOver, gameWidth, fruitImages) {  
   const [fruits, setFruits] = useState([]);  
   const fruitIdRef = useRef(0);  
@@ -36,9 +37,4 @@ export default function FruitSpawning(gameStarted, gameOver, gameWidth, fruitIma
     setFruits,  
     resetFruits  
   };  
-}  
-  
-function getRandomX(maxWidth) {  
-  const FRUIT_SIZE = 50;  
-  return Math.floor(Math.random() * (maxWidth - FRUIT_SIZE));  
 }

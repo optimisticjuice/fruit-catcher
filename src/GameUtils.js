@@ -13,8 +13,9 @@ const fruitImages = [
   
 
 function getRandomX(maxWidth) {
-  return Math.floor(Math.random() * (maxWidth - FRUIT_SIZE));
-
+  // Ensure we don't go below 0 if FRUIT_SIZE is larger than maxWidth
+  const effectiveWidth = Math.max(0, maxWidth - FRUIT_SIZE);
+  return Math.floor(Math.random() * effectiveWidth);
 }
 
 export {FRUIT_SIZE, fruitImages, getRandomX};

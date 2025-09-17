@@ -6,7 +6,7 @@ import Display from "./Display";
 import useWindowDimensions from "./Dimensions";
 import GameTimer from './GameTimer';  
 import FruitSpawning from './FruitSpawning';
-import {FRUIT_SIZE, fruitImages, getRandomX} from './GameUtils';
+import {FRUIT_SIZE, fruitImages} from './GameUtils';
 import AudioManager from './AudioManager';
 import MoveBasket from './MoveBasket';
 import './App.css';

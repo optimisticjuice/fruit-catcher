@@ -9,10 +9,11 @@
 }
 .start-modal{
   position: absolute;
-          top: 100vh / 2 - 40;
-          left: 100vw / 2 - 100;
-          width: 270;
-          height: 150;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 200px;
+          height: 100px;
           background-color: rgba(0,0,0,0.8);
           color: white;
           text-align: center;
@@ -32,5 +33,5 @@
   font-size: 18;
 }
 .start-button{
-  margin-top: 10;
+  margin-top: 20;
 }
