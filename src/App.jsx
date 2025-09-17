@@ -38,9 +38,7 @@ import './App.css';
   );  
   // 🍎 NEW EFFECT TO PAUSE AUDIO ON GAME OVER 🎶
   useEffect(() => {
-   if (gameOver) {
-     pauseMusic();
-   }
+   if (gameOver) pauseMusic();
  }, [gameOver]);
  // Reset basket position when GAME_WIDTH changes
   useEffect(() => {
@@ -77,7 +75,6 @@ import './App.css';
 
     return () => clearInterval(fallInterval);
   }, [basketX, gameOver,gameStarted, GAME_HEIGHT]);
-  
   // Restart game
   const restartGame = () => {
     setScore(0);
@@ -87,7 +84,6 @@ import './App.css';
     setGameOver(false);
     startMusic();
   };
-
     // Listen for keypress events to update volume
     useEffect(() => {
       function handleKeyDown(e) {
@@ -98,8 +94,6 @@ import './App.css';
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [gameStarted]);
-      
-    
 
   return (
     <>

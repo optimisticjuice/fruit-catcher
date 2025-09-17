@@ -12,5 +12,4 @@ const Basket = ({ x, width }) => {
   };
   return <img src={basketImg} alt="basket" style={style} draggable={false} />;
 };
-
 export default Basket;

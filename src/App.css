@@ -2,7 +2,7 @@
   position: relative;
         width: 100vw;
         height: 100vh;
-        border: 2px solid black;
+        border: 5px solid darkmagenta;
         background-color: lightyellow;
         overflow: hidden;
         margin: 0 auto;
@@ -27,7 +27,7 @@
   font-size: 18;
 }
 .score{
-  position: "absolute";
+  position: absolute;
   top: 15;
   left: 35;
   font-size: 18;
