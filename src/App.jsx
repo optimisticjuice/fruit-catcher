@@ -118,8 +118,8 @@ import './App.css';
         <div
         className="start-modal"
         >
-          <div>Press keys 1 to 9 to change volume (current: {volumeLevel})</div>
-          <div>Start Game!</div>
+          <div className="volume-info">Press keys 1 to 9 to change volume (current: {volumeLevel})</div>
+          <div className="start-text">Start Game!</div>
          {/* Show Start button if game hasn't started */}
         {/* Show Start button if game has NOT started */}
         <button className="start-button"

@@ -1,28 +1,29 @@
 .restart-modal{
     position: absolute;
       inset: 0; 
-      top: 100vh / 2 - 40; 
-      left: 100vw / 2 - 100; 
-      width: 200;
-      height: 120;
+      top: 100vh / 2; 
+      left: 100vw / 2; 
+      width: 100vw;
+      height: 100vh;
       background-color: rgba(0,0,0,0.8); 
       color: white;
       text-align: center;
-      padding: 20;
-      border-radius: 10;
+      padding: 1rem;
+      border-radius: 1rem;
       display: flex;
       flex-direction: column; 
       justify-content: center;
       align-items: center;
       z-index: 1000;
-}
+      font-size: 1.8rem;
+    }
 .restart-button{
-    margin-top: 15;
-    padding: 8px 16px;
-    border-radius: 6;
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
     border: none;
     cursor: pointer;
-    background-color: #4caf50; /* Green button */
-    color: white;
-    font-weight: bold;
+    background-color: darkgreen;
+    color: lightyellow;
+    font-weight: bolder;
 }

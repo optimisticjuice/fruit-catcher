@@ -1,3 +1,7 @@
+html{
+  font-size: 62.5%;
+}
+
 .game-container{
   position: relative;
         width: 100vw;
@@ -22,16 +26,33 @@
 }
 .timer{
   position: absolute;
-  top: 25;
-  right: 25;
-  font-size: 18;
+  top: 2.5rem;
+  left: 2.5rem;
+  font-size: 1.8rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 .score{
   position: absolute;
-  top: 15;
-  left: 35;
-  font-size: 18;
+  top: 7rem;
+  left: 2.5rem;
+  font-size: 1.8rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 .start-button{
-  margin-top: 20;
+  margin-top: 0.3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: bolder;
+  background-color: white;
+  color: rgb(0, 37, 0);
+}
+.volume-info{
+  font-size: 1.5rem;
+}
+.start-text{
+  font-size: 2rem;
 }
