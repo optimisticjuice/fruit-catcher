@@ -125,15 +125,7 @@ import './App.css';
         <button className="start-button"
   onClick={() => {
    startTimer();  // Start the game
-
-    if (audioRef.current) {
-      if (audioRef.current.paused || audioRef.current.ended) {
-        audioRef.current.currentTime = 0;  // Reset audio to start
-        audioRef.current.play().catch(() => {
-          // Ignore play errors due to autoplay restrictions
-        });
-      }
-    }
+   startMusic(); // Start the music
   }}
 >
   Start Game

@@ -8,7 +8,7 @@ const Basket = ({ x, width }) => {
     left: x,
     width: width,
     height: 30,
-    borderRadius: 10,
+    borderRadius: 25,
   };
   return <img src={basketImg} alt="basket" style={style} draggable={false} />;
 };
