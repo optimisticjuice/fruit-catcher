@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';  
   
-export default function AudioManager(backgroundMusic, volumeLevel) {  
+export default function AudioManager(volumeLevel) {  
   const audioRef = useRef(null);  
   
   useEffect(() => {  

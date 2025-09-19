@@ -19,7 +19,7 @@ import './App.css';
   const [volumeLevel, setVolumeLevel] = useState(5);
   const gameTime = 83;
   //  AudioManager makes the background music play and pause and controls the volume
-   const { audioRef, startMusic, pauseMusic } = AudioManager(backgroundMusic, volumeLevel);
+   const { audioRef, startMusic, pauseMusic } = AudioManager(volumeLevel);
   //  Timer controls the game time and game over
    const {   
     timer,   
