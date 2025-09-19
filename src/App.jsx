@@ -10,7 +10,7 @@ import {FRUIT_SIZE, fruitImages} from './GameUtils';
 import AudioManager from './AudioManager';
 import MoveBasket from './MoveBasket';
 import './App.css';
-
+//  Now Add Comments
   export default function App() {
   const { width: GAME_WIDTH, height: GAME_HEIGHT } = useWindowDimensions();
   const basketWidth = GAME_WIDTH * 0.2; // Calculate 20% of current game width
