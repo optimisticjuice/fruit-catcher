@@ -4,7 +4,7 @@ export default function useBasketControls(
   gameOver,   
   gameWidth,   
   basketWidth,   
-  setBasketX  
+  setBasketX,  
 ) {  
   const moveBasket = useCallback(  
     (e) => {  
@@ -14,7 +14,7 @@ export default function useBasketControls(
         setBasketX((x) => Math.max(0, x - 20));  
       } else if (e.key === "ArrowRight") {  
         setBasketX((x) => Math.min(gameWidth - basketWidth, x + 20));  
-      }  
+      }
     },  
     [gameOver, gameWidth, basketWidth, setBasketX]  
   );  

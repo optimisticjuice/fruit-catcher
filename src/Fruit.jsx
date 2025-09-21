@@ -7,7 +7,7 @@ const Fruit = ({ x, y, image }) => {
     top: y,
     width: FRUIT_SIZE,
     height: FRUIT_SIZE,
-    imageRendering: "pixelated",
+    imageRendering: "crisp-edges", 
     userSelect: "none",
     pointerEvents: "none",
   };

@@ -5,11 +5,12 @@ import Basket from "./Basket";
 import Display from "./Display";
 import useWindowDimensions from "./Dimensions";
 import GameTimer from './GameTimer';  
-import FruitSpawning from './FruitSpawning';
+import useFruitSpawning from './FruitSpawning';
 import {FRUIT_SIZE, fruitImages} from './GameUtils';
 import AudioManager from './AudioManager';
 import MoveBasket from './MoveBasket';
 import './App.css';
+
 //  Now Add Comments
   export default function App() {
   const { width: GAME_WIDTH, height: GAME_HEIGHT } = useWindowDimensions();
@@ -17,7 +18,7 @@ import './App.css';
   const [basketX, setBasketX] = useState(GAME_WIDTH / 2 - basketWidth / 2);
   const [score, setScore] = useState(0);
   const [volumeLevel, setVolumeLevel] = useState(5);
-  const gameTime = 83;
+  const gameTime = 5;
   //  AudioManager makes the background music play and pause and controls the volume
    const { audioRef, startMusic, pauseMusic } = AudioManager(volumeLevel);
   //  Timer controls the game time and game over
@@ -30,12 +31,21 @@ import './App.css';
     startTimer   
   } = GameTimer(gameTime);  
 
-  const { fruits, setFruits, resetFruits } = FruitSpawning(  
+  // Handle when a fruit is caught
+  const handleFruitCaught = () => {
+    setScore(prevScore => prevScore + 0.5);
+  };
+
+  const { fruits, resetFruits } = useFruitSpawning({  
     gameStarted,   
     gameOver,   
-    GAME_WIDTH,   
-    fruitImages  
-  );  
+    gameWidth: GAME_WIDTH,
+    gameHeight: GAME_HEIGHT,
+    basketX,
+    basketWidth,
+    fruitImages,
+    onFruitCaught: handleFruitCaught
+  });
   // 🍎 NEW EFFECT TO PAUSE AUDIO ON GAME OVER 🎶
   useEffect(() => {
    if (gameOver) pauseMusic();
@@ -46,35 +56,10 @@ import './App.css';
   }, [GAME_WIDTH, basketWidth]);
   
   
-  MoveBasket(gameOver, GAME_WIDTH, basketWidth, setBasketX);
+  MoveBasket(gameOver, GAME_WIDTH, basketWidth, setBasketX, GAME_HEIGHT);
   
-  // Animate fruit falling and check for catch
-  useEffect(() => {
-    if (!gameStarted || gameOver ) return;
-     
-    const fallInterval = setInterval(() => {
-      setFruits((fruits) => {
-        let newFruits = [];
-        fruits.forEach((fruit) => {
-          const newY = fruit.y + 5;
-          // Check if caught
-          if (
-            newY + FRUIT_SIZE >= GAME_HEIGHT - 30 && // near basket height
-            fruit.x + FRUIT_SIZE > basketX &&
-            fruit.x < basketX + basketWidth
-          ) {
-            setScore((score) => score + 0.5); // Increase score if caught
-          } else if (newY < GAME_HEIGHT) {
-            newFruits.push({ ...fruit, y: newY }); // keep fruit falling
-          }
-          // Else fruit falls off screen, do not keep
-        });
-        return newFruits;
-      });
-    }, 50);
 
-    return () => clearInterval(fallInterval);
-  }, [basketX, gameOver,gameStarted, GAME_HEIGHT]);
+
   // Restart game
   const restartGame = () => {
     setScore(0);
@@ -113,8 +98,8 @@ import './App.css';
       <div className="timer">
         Time: {timer}
       </div>
-      {gameOver && <Display restartGame={restartGame} score={score}/>}
-      {!gameStarted && !gameOver && (
+      {gameOver && <Display restartGame={restartGame} score={score} startMusic={startMusic}/>}
+      {!gameStarted && (
         <div
         className="start-modal"
         >

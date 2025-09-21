@@ -1,14 +1,9 @@
-import { useRef } from "react";
 import './Display.css';
+// import AudioManager from "./AudioManager";
 
-export default function Display({restartGame, score}){
-    const audioRef = useRef(null);
-    return(
+export default function Display({restartGame, score, startMusic}){
+  return(
         <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="game-over-title"
-        aria-describedby="game-over-message"
         className="restart-modal"
   >
     Score: {score}
@@ -22,15 +17,7 @@ export default function Display({restartGame, score}){
         restartGame();
 
         // Restart the background music if available
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0; // Reset audio to start
-          audioRef.current
-            .play()
-            .catch(() => {
-              // Ignore autoplay errors in browsers
-            });
-        }
-      }}
+        startMusic();}}
       className="restart-button">
       Restart Game
     </button>
